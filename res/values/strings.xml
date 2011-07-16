@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Encounter Runner</string>
+	<string name="main_title">Encounter Runner</string>
+    <string name="party_title">Party View</string>
+    <string name="character_title">Character</string>
+    <string name="table_title">Table</string>
+    <string name="scoreboard_title">Scoreboard</string>
+    <string name="options_title">Options</string>
+    <string name="about_title">About</string>
+    <string name="encID_title">Encounter ID:</string>
+    <string name="encID_hint">ID</string>
+    <string name="about_text">This is the Android front end to the Dungeons and Dragons encrunner.</string>
+</resources>
