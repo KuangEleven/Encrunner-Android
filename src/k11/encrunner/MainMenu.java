@@ -34,6 +34,10 @@ public class MainMenu extends Activity implements OnClickListener {
     		Intent i = new Intent(this, About.class);
     		startActivity(i);
     		break;
+    	case R.id.character_button:
+    		Intent i2 = new Intent(this, Character.class);
+    		startActivity(i2);
+    		break;
     	}
     }
 }
