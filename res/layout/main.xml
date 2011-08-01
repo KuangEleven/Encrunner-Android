@@ -26,6 +26,7 @@
     			android:layout_height="wrap_content"/>
     		<EditText
     			android:id="@+id/encID_text"
+    			android:numeric="integer"
 				android:hint="@string/encID_hint"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"/>
