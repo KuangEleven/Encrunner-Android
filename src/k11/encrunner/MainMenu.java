@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.TextView;
+import android.widget.EditText;
 
 public class MainMenu extends Activity implements OnClickListener {
     private SharedPreferences mPrefs;
-    private TextView encIDTextView;
+    private EditText encIDTextView;
 	
     /** Called when the activity is first created. */
     @Override
@@ -19,8 +20,8 @@ public class MainMenu extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        TextView encIDTextView = (TextView) findViewById(R.id.encID_text);
-        SharedPreferences mPrefs = getSharedPreferences("prefs",0);
+        encIDTextView = (EditText) findViewById(R.id.encID_text);
+        mPrefs = getSharedPreferences("prefs",0);
         if (mPrefs.getInt("encID", 0) != 0)
         	encIDTextView.setText(String.valueOf(mPrefs.getInt("encID", 0)));
         
@@ -37,18 +38,15 @@ public class MainMenu extends Activity implements OnClickListener {
         optionsButton.setOnClickListener(this);
         View aboutButton = findViewById(R.id.about_button);
         aboutButton.setOnClickListener(this);
-        
-        SharedPreferences.Editor ed = mPrefs.edit(); //Test
     }
     
     public void onPause()
     {
     	super.onPause();
     	
-    	//SharedPreferences test = mPrefs;
-        //SharedPreferences.Editor ed = mPrefs.edit();
-        //ed.putInt("encID", Integer.getInteger((String) encIDTextView.getText()));
-        //ed.commit();
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putInt("encID", Integer.valueOf(encIDTextView.getText().toString()));
+        ed.commit();
 
     }
     
