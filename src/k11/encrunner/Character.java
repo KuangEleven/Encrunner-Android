@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -22,22 +23,22 @@ public class Character extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.character);
 		
-		//Posting XML Test, should update Baern's HP from 45 to 40 in encounter 65
-		String xml = "<character><name>Kelithz</name></character>";
-		StringEntity se = null;
-		try {
-			se = new StringEntity(xml,"UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		se.setContentType("application/rest+xml");
-		HttpPost postRequest = new HttpPost("http://encrunner.heroku.com/characters/17.xml?api_key=7686f5c264fa75e2db2816ab212ff95c16b2f2cf");
-		postRequest.setEntity(se);
+		//Posting XML Test
+		//String xml = "character[name]=KelithYYY";
+		//StringEntity se = null;
+		//try {
+		//	se = new StringEntity(xml,"UTF-8");
+		//} catch (UnsupportedEncodingException e) {
+		//	// TODO Auto-generated catch block
+		//	e.printStackTrace();
+		//}
+		//se.setContentType("application/rest+xml");
+		HttpPut putRequest = new HttpPut("http://encrunner.heroku.com/encounters/65.xml?api_key=7686f5c264fa75e2db2816ab212ff95c16b2f2cf&encounter[round]=1");
+		//putRequest.setEntity(se);
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpResponse response = null;
 		try {
-			response = httpclient.execute(postRequest);
+			response = httpclient.execute(putRequest);
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
