@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android" >
+	<EditTextPreference
+		android:key="refresh"
+		android:numeric="integer"
+		android:title="@string/refresh_title"
+		android:summary="@string/refresh_summary"
+		android:defaultValue="100" />
+	<EditTextPreference
+		android:key="url"
+		android:title="@string/url_title"
+		android:summary="@string/url_summary"
+		android:defaultValue="http://encrunner.heroku.com" />
+</PreferenceScreen>

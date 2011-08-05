@@ -11,34 +11,38 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import android.sax.EndElementListener;
+import android.content.SharedPreferences;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.sax.Element;
-import android.sax.StartElementListener;
 
-public class Encounter {
-	private Integer encID;
+public class Encounter { //TODO Add Interface for all these entity classes? Would implement constructor(), constructor(id), Get(),Update(),Create(),Delete()
+	private Integer id;
 	public Integer round;
 	public Integer currPosition;
-	public ArrayList<Creature> creatureList; //TODO Make private after appropriate accessors are made
+	private SharedPreferences prefs;
+	public ArrayList<Member> members; //TODO Make private after appropriate accessors are made
 	
-	private Creature currCreature;
-	
-	/** Initializes encounter, calls Update */
-	Encounter(Integer encID_arg)
+	/** Initialized encounter */
+	Encounter(SharedPreferences prefs)
 	{
-		encID = encID_arg;
-		creatureList = new ArrayList<Creature>();
-		Update();
+		members = new ArrayList<Member>();
+		this.prefs = prefs;
 	}
 	
-	/** Gets and parses XML from encrunner website */
-	public void Update()
+	/** Initializes encounter with a given encID */
+	Encounter(Integer id,SharedPreferences prefs)
+	{
+		this(prefs);
+		this.id=id;
+		Get();
+	}
+	
+	/** Gets Encounter data from XML, must have id set */
+	public void Get()
 	{
 		RootElement root = new RootElement("encounter");
 		root.getChild("round").setEndTextElementListener(
@@ -54,79 +58,20 @@ public class Encounter {
 					}
 				});
 		
-		//Element creatureElementList = root.getChild("members"); //List of creatures
 		Element creatureElement = root.getChild("members").getChild("member"); //XML creature entry
-		
-		creatureElement.setStartElementListener(
-				new StartElementListener() {
-					public void start(Attributes attributes) {
-						currCreature = new Creature();
-					}
-				});
 		
 		creatureElement.getChild("id").setEndTextElementListener(
 				new EndTextElementListener() {
 					public void end(String body) {
-						currCreature.id = Integer.valueOf(body);
-					}
-				});
-		
-		creatureElement.getChild("character_id").setEndTextElementListener( //TODO Only called if creature is a PC. Should cast to PlayerCharacter
-				new EndTextElementListener() {
-					public void end(String body) {
-						if (body != "")
-						{
-							//currCreature = (PlayerCharacter)currCreature;
-							currCreature.character_id = Integer.valueOf(body);
-						}
-					}
-				});
-		
-		creatureElement.getChild("monster_id").setEndTextElementListener( //TODO Only called if creature is a NPC. Should cast to NonPlayerCharacter
-				new EndTextElementListener() {
-					public void end(String body) {
-						if (body != "")
-						{
-							//currCreature = (NonPlayerCharacter)currCreature;
-							currCreature.monster_id = Integer.valueOf(body);
-						}
-					}
-				});
-		
-		creatureElement.getChild("name").setEndTextElementListener(
-				new EndTextElementListener() {
-					public void end(String body) {
-						currCreature.name = body;
-					}
-				});
-		
-		creatureElement.getChild("enc_hp").setEndTextElementListener(
-				new EndTextElementListener() {
-					public void end(String body) {
-						currCreature.enc_hp = Integer.valueOf(body);
-					}
-				});
-		
-		creatureElement.getChild("position").setEndTextElementListener(
-				new EndTextElementListener() {
-					public void end(String body) {
-						currCreature.position = Integer.valueOf(body); //should always equal index +1 of creatureList
-					}
-				});
-		
-		//TODO Handle markers
-		
-		creatureElement.setEndElementListener(
-				new EndElementListener() {
-					public void end() {
-						creatureList.add(currCreature);
+						members.add(new Member(Integer.valueOf(body),prefs));
 					}
 				});
 		
 		//Open HTTP Connection
 		HttpURLConnection urlConnection = null;
 		try {
-		URL url = new URL("http://encrunner.heroku.com/encounters/" + encID + ".xml?api_key=2d88e8bcff1615e6c6fab893feba041c053fdbe1"); //TODO Pass in API Key properly
+		//URL url = new URL("http://encrunner.heroku.com/encounters/" + id + ".xml?api_key=2d88e8bcff1615e6c6fab893feba041c053fdbe1"); //TODO Pass in API Key properly
+		URL url = new URL(Options.getURL(prefs) + "/encounters/" + id + ".xml?api_key=2d88e8bcff1615e6c6fab893feba041c053fdbe1"); //TODO Pass in API Key properly
 		urlConnection = (HttpURLConnection) url.openConnection();
 		InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 		

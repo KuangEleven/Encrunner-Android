@@ -11,4 +11,14 @@
     <string name="encID_title">Encounter ID:</string>
     <string name="encID_hint">ID</string>
     <string name="about_text">This is the Android front end to the Dungeons and Dragons encrunner.</string>
+    <string name="refresh_title">Refresh (ms)</string>
+    <string name="refresh_summary">Interval between refreshing Character and Table view.</string>
+    <string name="url_title">URL</string>
+    <string name="url_summary">Encrunner URL.</string>
+    <string name="charselect_title">Character Select</string>
+    <string name="character_enchp_label">ENC HP</string>
+    <string name="character_plus_title">+</string>
+    <string name="character_minus_title">-</string>
+    <string name="character_change_label">CHANGE</string>
+    <string name="character_refresh_label">Refresh Screen</string>
 </resources>

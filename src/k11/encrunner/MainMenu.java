@@ -2,14 +2,17 @@ package k11.encrunner;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
 public class MainMenu extends Activity implements OnClickListener {
-    private SharedPreferences mPrefs;
+    //private SharedPreferences mPrefs;
     private EditText encIDTextView;
 	
     /** Called when the activity is first created. */
@@ -20,9 +23,9 @@ public class MainMenu extends Activity implements OnClickListener {
         setContentView(R.layout.main);
         
         encIDTextView = (EditText) findViewById(R.id.encID_text);
-        mPrefs = getSharedPreferences("prefs",0);
-        if (mPrefs.getInt("encID", 0) != 0)
-        	encIDTextView.setText(String.valueOf(mPrefs.getInt("encID", 0)));
+        //SharedPreferences sharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
+        if (Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this)) != 0)
+        	encIDTextView.setText(String.valueOf(Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this))));
         
         //Click listeners
         View partyButton = findViewById(R.id.party_button);
@@ -43,24 +46,38 @@ public class MainMenu extends Activity implements OnClickListener {
     {
     	super.onPause();
     	
-        SharedPreferences.Editor ed = mPrefs.edit();
-        ed.putInt("encID", Integer.valueOf(encIDTextView.getText().toString()));
-        ed.commit();
+    	Options.setEncID(Integer.valueOf(encIDTextView.getText().toString()),PreferenceManager.getDefaultSharedPreferences(this));
+    	
+//        SharedPreferences.Editor ed = mPrefs.edit();
+//        ed.putInt("encID", Integer.valueOf(encIDTextView.getText().toString()));
+//        ed.commit();
 
     }
     
     public void onClick(View v)
     {
+    	Intent i;
     	switch (v.getId())
     	{
     	case R.id.about_button:
-    		Intent i = new Intent(this, About.class);
+    		i = new Intent(this, About.class);
     		startActivity(i);
     		break;
     	case R.id.character_button:
-    		Intent i2 = new Intent(this, Character.class);
-    		startActivity(i2);
+    		i = new Intent(this, CharacterView.class);
+    		startActivity(i);
     		break;
+    	case R.id.options_button:
+    		i = new Intent(this, Options.class);
+    		startActivity(i);
+    		break;
+//    	case R.id.party_button:
+//    		i = new Intent(this, CharacterSelect.class);
+//    		String[] characterArray = new String[] {"Kelith","Baern","Mubb","Shifty Githyanki"};
+//    		i.putExtra("k11.encrunner.characterArray", characterArray);
+//    		startActivityForResult(i, 0);
+//    		Log.d("TEST","Returned properly");
+//    		break;
     	}
     }
 }
