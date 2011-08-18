@@ -3,13 +3,12 @@ package k11.encrunner;
 import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainMenu extends Activity implements OnClickListener {
     //private SharedPreferences mPrefs;
@@ -26,7 +25,7 @@ public class MainMenu extends Activity implements OnClickListener {
         //SharedPreferences sharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
         if (Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this)) != 0)
         	encIDTextView.setText(String.valueOf(Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this))));
-        
+        Log.d("TEST","Break 1");
         //Click listeners
         View partyButton = findViewById(R.id.party_button);
         partyButton.setOnClickListener(this);
@@ -47,8 +46,8 @@ public class MainMenu extends Activity implements OnClickListener {
     public void onPause()
     {
     	super.onPause();
-    	
-    	Options.setEncID(Integer.valueOf(encIDTextView.getText().toString()),PreferenceManager.getDefaultSharedPreferences(this));
+    	if (encIDTextView.getText().toString().length() > 0)
+    		Options.setEncID(Integer.valueOf(encIDTextView.getText().toString()),PreferenceManager.getDefaultSharedPreferences(this));
     	
 //        SharedPreferences.Editor ed = mPrefs.edit();
 //        ed.putInt("encID", Integer.valueOf(encIDTextView.getText().toString()));
@@ -66,8 +65,13 @@ public class MainMenu extends Activity implements OnClickListener {
     		startActivity(i);
     		break;
     	case R.id.character_button:
-    		i = new Intent(this, CharacterView.class);
-    		startActivity(i);
+    		if (encIDTextView.getText().toString().length() > 0)
+    		{
+	    		i = new Intent(this, CharacterView.class);
+	    		startActivity(i);
+    		}
+    		else
+    			Toast.makeText(this, "Enter an Encounter ID", Toast.LENGTH_SHORT).show();
     		break;
     	case R.id.options_button:
     		i = new Intent(this, Options.class);

@@ -143,7 +143,7 @@ public class Member {
 		//Open HTTP Connection
 		HttpURLConnection urlConnection = null;
 		try {
-		URL url = new URL(Options.getURL(prefs) + "/members/" + id + ".xml?api_key=2d88e8bcff1615e6c6fab893feba041c053fdbe1"); //TODO Pass in API Key properly
+		URL url = new URL(Options.getURL(prefs) + "/members/" + id + ".xml?api_key=" + Options.getAPIKey(prefs));
 		urlConnection = (HttpURLConnection) url.openConnection();
 		InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 		
@@ -189,7 +189,7 @@ public class Member {
 			e.printStackTrace();
 		}
 		se.setContentType("application/xml");
-		HttpPut putRequest = new HttpPut(Options.getURL(prefs) + "/members/" + id + ".xml?api_key=7686f5c264fa75e2db2816ab212ff95c16b2f2cf");
+		HttpPut putRequest = new HttpPut(Options.getURL(prefs) + "/members/" + id + ".xml?api_key=" + Options.getAPIKey(prefs));
 		putRequest.setEntity(se);
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpResponse response = null;

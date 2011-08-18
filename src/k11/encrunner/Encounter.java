@@ -70,8 +70,7 @@ public class Encounter { //TODO Add Interface for all these entity classes? Woul
 		//Open HTTP Connection
 		HttpURLConnection urlConnection = null;
 		try {
-		//URL url = new URL("http://encrunner.heroku.com/encounters/" + id + ".xml?api_key=2d88e8bcff1615e6c6fab893feba041c053fdbe1"); //TODO Pass in API Key properly
-		URL url = new URL(Options.getURL(prefs) + "/encounters/" + id + ".xml?api_key=2d88e8bcff1615e6c6fab893feba041c053fdbe1"); //TODO Pass in API Key properly
+		URL url = new URL(Options.getURL(prefs) + "/encounters/" + id + ".xml?api_key=" + Options.getAPIKey(prefs));
 		urlConnection = (HttpURLConnection) url.openConnection();
 		InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 		

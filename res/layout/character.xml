@@ -39,8 +39,85 @@
 			android:layout_weight="1" />
 	</TableRow>
 	<TableRow>
-		<Button
-			android:id="@+id/character_refresh_button"
-			android:text="@string/character_refresh_label"/>
+		<TextView
+			android:text="@string/character_hp_label"
+			android:layout_weight="1" />
+		<TextView
+			android:text="@string/character_ac_label"
+			android:layout_weight="1" />
+		<TextView
+			android:text="@string/character_insight_label"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:id="@+id/character_hp"
+			android:layout_weight="1" />
+		<TextView
+			android:id="@+id/character_ac"
+			android:layout_weight="1" />
+		<TextView
+			android:id="@+id/character_insight"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:text="@string/character_speed_label"
+			android:layout_weight="1" />
+		<TextView
+			android:text="@string/character_fort_label"
+			android:layout_weight="1" />
+		<TextView
+			android:text="@string/character_perception_label"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:id="@+id/character_speed"
+			android:layout_weight="1" />
+		<TextView
+			android:id="@+id/character_fort"
+			android:layout_weight="1" />
+		<TextView
+			android:id="@+id/character_perception"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:text="@string/character_init_label"
+			android:layout_weight="1" />
+		<TextView
+			android:text="@string/character_reflex_label"
+			android:layout_weight="1" />
+		<TextView
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:id="@+id/character_init"
+			android:layout_weight="1" />
+		<TextView
+			android:id="@+id/character_reflex"
+			android:layout_weight="1" />
+		<TextView
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:layout_weight="1" />
+		<TextView
+			android:text="@string/character_will_label"
+			android:layout_weight="1" />
+		<TextView
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:layout_weight="1" />
+		<TextView
+			android:id="@+id/character_will"
+			android:layout_weight="1" />
+		<TextView
+			android:layout_weight="1" />
 	</TableRow>
 </TableLayout>

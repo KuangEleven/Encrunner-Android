@@ -13,7 +13,7 @@
     <string name="encID_hint">ID</string>
     <string name="about_text">This is the Android front end to the Dungeons and Dragons encrunner.</string>
     <string name="refresh_title">Refresh (ms)</string>
-    <string name="refresh_summary">Interval between refreshing Character and Table view.</string>
+    <string name="refresh_summary">Interval between refreshing Character and Table view. Set to 0 to disable auto-refresh.</string>
     <string name="url_title">URL</string>
     <string name="url_summary">Encrunner URL.</string>
     <string name="charselect_title">Character Select</string>
@@ -21,7 +21,15 @@
     <string name="character_plus_title">+</string>
     <string name="character_minus_title">-</string>
     <string name="character_change_label">CHANGE</string>
-    <string name="character_refresh_label">Refresh Screen</string>
+    <string name="character_hp_label"><u>HP</u></string>
+    <string name="character_ac_label"><u>AC</u></string>
+    <string name="character_insight_label"><u>Passive Insight</u></string>
+    <string name="character_speed_label"><u>Speed</u></string>
+    <string name="character_fort_label"><u>Fort</u></string>
+    <string name="character_perception_label"><u>Passive Percep</u></string>
+    <string name="character_init_label"><u>Init</u></string>
+    <string name="character_reflex_label"><u>Reflex</u></string>
+    <string name="character_will_label"><u>Will</u></string>
     <string name="username_title">Username</string>
     <string name="password_title">Password</string>
     <string name="loginbutton_title">Login</string>

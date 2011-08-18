@@ -1,10 +1,8 @@
 package k11.encrunner;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 
 public class Options extends PreferenceActivity {
 	@Override
@@ -28,10 +26,22 @@ public class Options extends PreferenceActivity {
 		return sharedPreferences.getInt("encID", 0);
 	}
 	
+	public static String getAPIKey(SharedPreferences sharedPreferences)
+	{
+		return sharedPreferences.getString("APIKey", "");
+	}
+	
 	public static void setEncID(Integer encID,SharedPreferences sharedPreferences)
 	{
         SharedPreferences.Editor ed = sharedPreferences.edit();
         ed.putInt("encID", encID);
+        ed.commit();
+	}
+	
+	public static void setAPIKey(String key,SharedPreferences sharedPreferences)
+	{
+        SharedPreferences.Editor ed = sharedPreferences.edit();
+        ed.putString("APIKey", key);
         ed.commit();
 	}
 }
