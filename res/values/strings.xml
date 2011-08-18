@@ -5,6 +5,7 @@
     <string name="party_title">Party View</string>
     <string name="character_title">Character</string>
     <string name="table_title">Table</string>
+    <string name="login_title">Login</string>
     <string name="scoreboard_title">Scoreboard</string>
     <string name="options_title">Options</string>
     <string name="about_title">About</string>
@@ -21,4 +22,7 @@
     <string name="character_minus_title">-</string>
     <string name="character_change_label">CHANGE</string>
     <string name="character_refresh_label">Refresh Screen</string>
+    <string name="username_title">Username</string>
+    <string name="password_title">Password</string>
+    <string name="loginbutton_title">Login</string>
 </resources>

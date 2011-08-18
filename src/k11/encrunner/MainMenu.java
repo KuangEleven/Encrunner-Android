@@ -40,6 +40,8 @@ public class MainMenu extends Activity implements OnClickListener {
         optionsButton.setOnClickListener(this);
         View aboutButton = findViewById(R.id.about_button);
         aboutButton.setOnClickListener(this);
+        View loginButton = findViewById(R.id.login_button);
+        loginButton.setOnClickListener(this);
     }
     
     public void onPause()
@@ -69,6 +71,10 @@ public class MainMenu extends Activity implements OnClickListener {
     		break;
     	case R.id.options_button:
     		i = new Intent(this, Options.class);
+    		startActivity(i);
+    		break;
+    	case R.id.login_button:
+    		i = new Intent(this, Login.class);
     		startActivity(i);
     		break;
 //    	case R.id.party_button:
