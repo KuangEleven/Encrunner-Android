@@ -22,6 +22,7 @@ import android.sax.RootElement;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Login extends Activity implements OnClickListener {
 	private SharedPreferences sharedPreferences;
@@ -43,6 +44,7 @@ public class Login extends Activity implements OnClickListener {
 				new EndTextElementListener() {
 					public void end(String body) {
 						Options.setAPIKey(body,sharedPreferences);
+						Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
 					}
 				});
 		
@@ -70,6 +72,8 @@ public class Login extends Activity implements OnClickListener {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Toast.makeText(getApplicationContext(), "Bad Login", Toast.LENGTH_SHORT).show();
+			return;
 		}
 	    finally {
 		     urlConnection.disconnect();

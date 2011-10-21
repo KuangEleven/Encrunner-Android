@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,12 +38,14 @@ public class Member {
 	public Integer initiative;
 	public Date updated_at; //Not implemented
 	public Boolean visible;
+	public ArrayList<Marker> markers;
 	
 	private SharedPreferences prefs;
 	
 	/** Initializes a Member to null values (Date fields as current date) */
 	Member(SharedPreferences prefs)
 	{
+		markers = new ArrayList<Marker>();
 		created_at = new Date();
 		updated_at = new Date();
 		this.prefs = prefs;
