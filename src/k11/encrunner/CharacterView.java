@@ -2,6 +2,7 @@ package k11.encrunner;
 
 import java.util.ArrayList;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,10 +10,11 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class CharacterView extends Activity implements OnClickListener {
+public class CharacterView extends ListActivity implements OnClickListener {
 	private Member currMember;
 	private Character currCharacter;
 	private ArrayList<Integer> idArray;
@@ -35,12 +37,14 @@ public class CharacterView extends Activity implements OnClickListener {
 		Encounter encounter  = new Encounter(Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this)),PreferenceManager.getDefaultSharedPreferences(this));
 		ArrayList<String> nameArray = new ArrayList<String>();
 		idArray = new ArrayList<Integer>();
+		//Log.d("TEST",Integer.toString(Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this))));
 		for (Member iterMember : encounter.members)
 		{
 			if (iterMember.character_id != null)
 			{
 				nameArray.add(iterMember.name);
 				idArray.add(iterMember.id);
+				//Log.d("TEST",iterMember.name);
 			}
 		}
 		
@@ -99,6 +103,16 @@ public class CharacterView extends Activity implements OnClickListener {
 		currMember.Get();
 		((TextView) findViewById(R.id.character_name)).setText(String.valueOf(currMember.name));
 		((TextView) findViewById(R.id.character_enchp)).setText(String.valueOf(currMember.enc_hp));
+		//Setup List View
+		//This dual array hack irks me...
+		ArrayList<Integer> markerIDArray = new ArrayList<Integer>();
+		ArrayList<String> markerNameArray = new ArrayList<String>();
+		for (Marker iterMarker : currMember.markers)
+		{
+				markerNameArray.add(iterMarker.effect);
+				markerIDArray.add(iterMarker.id);
+		}
+		setListAdapter(new ArrayAdapter<String>(this, R.layout.listitem,markerNameArray));
 	}
 
 	@Override

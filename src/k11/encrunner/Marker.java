@@ -22,11 +22,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 
 public class Marker {
-	public String color; //Make actual color type of some sort
+	public Integer color; //Make actual color type of some sort
 	public Date created_at; //Not Implemented
 	public String effect;
 	public Integer id;
@@ -46,7 +47,7 @@ public class Marker {
 		this.prefs = prefs;
 	}
 	
-	/** Initializes a Member with the given id and gets data */
+	/** Initializes a Marker with the given id and gets data */
 	Marker(Integer id,SharedPreferences prefs)
 	{
 		this(prefs);
@@ -58,14 +59,14 @@ public class Marker {
 	public void Get()
 	{
 		//Setup listeners for XML handling
-		RootElement memberElement = new RootElement("character");
+		RootElement memberElement = new RootElement("marker");
 		
 		memberElement.getChild("color").setEndTextElementListener(
 				new EndTextElementListener() {
 					public void end(String body) {
 						if (body != "")
 						{
-							color = body;
+							color = Color.parseColor(body);
 						}
 					}
 				});
@@ -150,7 +151,7 @@ public class Marker {
 	public void Update()
 	{
 		String xml = "<marker>";
-		xml += "<color>" + color + "</color>";
+		xml += "<color>" + "#" + Integer.toHexString(Color.red(color)) + Integer.toHexString(Color.green(color)) + Integer.toHexString(Color.blue(color)) + "</color>"; //Convert back to XML color description
 		xml += "<effect>" + effect + "</effect>";
 		xml += "<member-id>" + member_id + "</member-id>";
 		xml += "<round-added>" + round_added + "</round-added>";

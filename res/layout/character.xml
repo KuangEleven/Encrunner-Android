@@ -28,10 +28,12 @@
 		<Button
 			android:id="@+id/character_plus_button"
 			android:text="@string/character_plus_title"
-			android:layout_weight="1"/>
+			android:layout_width="40dip"
+			android:layout_weight="1"/>"
 		<Button
 			android:id="@+id/character_minus_button"
 			android:text="@string/character_minus_title"
+			android:layout_width="40dip"
 			android:layout_weight="1"/>
 		<EditText
 			android:id="@+id/character_change"
@@ -119,5 +121,19 @@
 			android:layout_weight="1" />
 		<TextView
 			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<TextView
+			android:text="@string/character_markers_label"
+			android:layout_weight="1" 
+			android:layout_span="4" />
+	</TableRow>
+	<TableRow>
+		<ListView
+			android:id="@android:id/list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:layout_span="4" />
 	</TableRow>
 </TableLayout>

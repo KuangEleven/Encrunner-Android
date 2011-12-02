@@ -30,6 +30,7 @@
     <string name="character_init_label"><u>Init</u></string>
     <string name="character_reflex_label"><u>Reflex</u></string>
     <string name="character_will_label"><u>Will</u></string>
+    <string name="character_markers_label"><u>Markers</u></string>
     <string name="username_title">Username</string>
     <string name="password_title">Password</string>
     <string name="loginbutton_title">Login</string>

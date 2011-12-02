@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.content.SharedPreferences;
+import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 
@@ -33,21 +34,17 @@ public class Member {
 	public Integer position;
 	public Integer character_id;
 	public Integer monster_id;
-	public Date created_at; //Not implemented
 	public Integer encounter_id;
 	public Integer initiative;
-	public Date updated_at; //Not implemented
 	public Boolean visible;
 	public ArrayList<Marker> markers;
 	
 	private SharedPreferences prefs;
 	
-	/** Initializes a Member to null values (Date fields as current date) */
+	/** Initializes a Member to null values */
 	Member(SharedPreferences prefs)
 	{
 		markers = new ArrayList<Marker>();
-		created_at = new Date();
-		updated_at = new Date();
 		this.prefs = prefs;
 	}
 	
@@ -62,10 +59,12 @@ public class Member {
 	/** Gets Member data from XML, must have id set */ //TODO Enforce id with exception handling
 	public void Get()
 	{
+		markers.clear();
+		
 		//Setup listeners for XML handling
 		RootElement memberElement = new RootElement("member");
 		
-		memberElement.getChild("character-id").setEndTextElementListener( //TODO throw all this common code into another class, RubyXMLParser?
+		memberElement.getChild("character_id").setEndTextElementListener( //TODO throw all this common code into another class, RubyXMLParser?
 				new EndTextElementListener() {
 					public void end(String body) {
 						if (body != "")
@@ -75,7 +74,7 @@ public class Member {
 					}
 				});
 		
-		memberElement.getChild("monster-id").setEndTextElementListener(
+		memberElement.getChild("monster_id").setEndTextElementListener(
 				new EndTextElementListener() {
 					public void end(String body) {
 						if (body != "")
@@ -92,7 +91,7 @@ public class Member {
 					}
 				});
 		
-		memberElement.getChild("enc-hp").setEndTextElementListener(
+		memberElement.getChild("enc_hp").setEndTextElementListener(
 				new EndTextElementListener() {
 					public void end(String body) {
 						enc_hp = Integer.valueOf(body);
@@ -106,14 +105,7 @@ public class Member {
 					}
 				});
 		
-//		memberElement.getChild("created-at").setEndTextElementListener( //TODO Implement ISO 8601 parsing
-//				new EndTextElementListener() {
-//					public void end(String body) {
-//						created_at = Time.body;
-//					}
-//				});
-		
-		memberElement.getChild("encounter-id").setEndTextElementListener(
+		memberElement.getChild("encounter_id").setEndTextElementListener(
 				new EndTextElementListener() {
 					public void end(String body) {
 						encounter_id = Integer.valueOf(body);
@@ -123,16 +115,11 @@ public class Member {
 		memberElement.getChild("initiative").setEndTextElementListener(
 				new EndTextElementListener() {
 					public void end(String body) {
-						initiative = Integer.valueOf(body);
+						if (body != "") { //Sometimes initiative is missing
+							initiative = Integer.valueOf(body);
+						}
 					}
 				});
-		
-//		memberElement.getChild("updated-at").setEndTextElementListener( //TODO Implement ISO 8601 parsing
-//		new EndTextElementListener() {
-//			public void end(String body) {
-//				updated_at = Time.body;
-//			}
-//		});
 		
 		memberElement.getChild("visible").setEndTextElementListener(
 				new EndTextElementListener() {
@@ -141,7 +128,12 @@ public class Member {
 					}
 				});
 		
-		//TODO Handle markers
+		memberElement.getChild("markers").getChild("marker").getChild("id").setEndTextElementListener(
+				new EndTextElementListener() {
+					public void end(String body) {
+						markers.add(new Marker(Integer.valueOf(body),prefs));
+					}
+				});
 		
 		//Open HTTP Connection
 		HttpURLConnection urlConnection = null;
@@ -174,13 +166,13 @@ public class Member {
 	{
 		String xml = "<member>";
 		xml += "<name>" + name + "</name>";
-		xml += "<enc-hp>" + enc_hp + "</enc-hp>";
+		xml += "<enc_hp>" + enc_hp + "</enc_hp>";
 		xml += "<position>" + position + "</position>";
 		if (character_id != null)
-			xml += "<character-id>" + character_id + "</character-id>";
+			xml += "<character_id>" + character_id + "</character_id>";
 		if (monster_id != null)
-			xml += "<monster-id>" + monster_id + "</monster-id>";
-		xml += "<encounter-id>" + encounter_id + "</encounter-id>";
+			xml += "<monster_id>" + monster_id + "</monster_id>";
+		xml += "<encounter_id>" + encounter_id + "</encounter_id>";
 		xml += "<initiative>" + initiative + "</initiative>";
 		xml += "<visible>" + visible + "</visible>";
 		xml += "</member>";
