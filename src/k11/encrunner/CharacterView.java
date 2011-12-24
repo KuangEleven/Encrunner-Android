@@ -1,18 +1,39 @@
 package k11.encrunner;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import k11.encrunner.Login.ConnectionTask;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.sax.EndTextElementListener;
+import android.sax.RootElement;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CharacterView extends ListActivity implements OnClickListener {
 	private Member currMember;
@@ -20,6 +41,7 @@ public class CharacterView extends ListActivity implements OnClickListener {
 	private ArrayList<Integer> idArray;
 	private SharedPreferences prefs;
 	private Handler refreshHandler = new Handler();
+	private Encounter encounter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,29 +56,11 @@ public class CharacterView extends ListActivity implements OnClickListener {
         View minusButton = findViewById(R.id.character_minus_button);
         minusButton.setOnClickListener(this);
 		
-		Encounter encounter  = new Encounter(Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this)),PreferenceManager.getDefaultSharedPreferences(this));
-		ArrayList<String> nameArray = new ArrayList<String>();
-		idArray = new ArrayList<Integer>();
-		//Log.d("TEST",Integer.toString(Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this))));
-		for (Member iterMember : encounter.members)
-		{
-			if (iterMember.character_id != null)
-			{
-				nameArray.add(iterMember.name);
-				idArray.add(iterMember.id);
-				//Log.d("TEST",iterMember.name);
-			}
-		}
+		encounter  = new Encounter(PreferenceManager.getDefaultSharedPreferences(this));
+		encounter.id=Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this));
 		
-		Intent i = new Intent(this, CharacterSelect.class);
-		String[] characterArray = nameArray.toArray(new String[nameArray.size()]);
-		i.putExtra("k11.encrunner.characterArray", characterArray);
-		startActivityForResult(i, 0);
-		//Log.d("TEST","Returned properly");
-		
-		
-		//TextView debugTextView = (TextView) findViewById(R.id.character_content);
-		//debugTextView.setText(String.valueOf(encounter.members.get(0).name));
+		EncounterGetTask task = new EncounterGetTask(this);
+		task.execute(encounter);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -100,19 +104,9 @@ public class CharacterView extends ListActivity implements OnClickListener {
 	
 	private void refresh()
 	{
-		currMember.Get();
-		((TextView) findViewById(R.id.character_name)).setText(String.valueOf(currMember.name));
-		((TextView) findViewById(R.id.character_enchp)).setText(String.valueOf(currMember.enc_hp));
-		//Setup List View
-		//This dual array hack irks me...
-		ArrayList<Integer> markerIDArray = new ArrayList<Integer>();
-		ArrayList<String> markerNameArray = new ArrayList<String>();
-		for (Marker iterMarker : currMember.markers)
-		{
-				markerNameArray.add(iterMarker.effect);
-				markerIDArray.add(iterMarker.id);
-		}
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.listitem,markerNameArray));
+		MemberGetTask task = new MemberGetTask(this);
+		//task.executeOnExecutor(SERIAL_EXECUTOR,currMember);
+		task.execute(currMember);
 	}
 
 	@Override
@@ -123,21 +117,117 @@ public class CharacterView extends ListActivity implements OnClickListener {
 	    	case R.id.character_plus_button:
 	    		if (((TextView) findViewById(R.id.character_change)).getText().toString().length() > 0)
 	    		{
-		    		currMember.enc_hp += Integer.valueOf(((EditText) findViewById(R.id.character_change)).getText().toString());
-		    		currMember.Update();
-		    		((TextView) findViewById(R.id.character_change)).setText("");
-		    		refresh();
+		    		MemberUpdateTask task = new MemberUpdateTask(currMember);
+		    		task.execute(Integer.valueOf(((EditText) findViewById(R.id.character_change)).getText().toString()));
 	    		}
 	    		break;
 	    	case R.id.character_minus_button:
 	    		if (((TextView) findViewById(R.id.character_change)).getText().toString().length() > 0)
 	    		{
-		    		currMember.enc_hp -= Integer.valueOf(((EditText) findViewById(R.id.character_change)).getText().toString());
-		    		currMember.Update();
-		    		((TextView) findViewById(R.id.character_change)).setText("");
-		    		refresh();
+		    		MemberUpdateTask task = new MemberUpdateTask(currMember);
+		    		task.execute(-1 * Integer.valueOf(((EditText) findViewById(R.id.character_change)).getText().toString()));
 	    		}
 	    		break;
     	}
+	}
+	
+	class EncounterGetTask extends AsyncTask<Encounter, Void, Encounter> {
+		private Encounter encounterCopy;
+		private Context currContext;
+		
+		public EncounterGetTask(Context currContext) {
+			this.currContext = currContext;
+		}
+		
+		@Override
+		//Network code, run in separate thread
+		protected Encounter doInBackground(Encounter... params) {
+			encounterCopy = params[0]; //Not sure if required
+			encounterCopy.Get();
+			return encounterCopy;
+		}
+		
+		@Override
+		//After network code ran, run in UI thread
+		protected void onPostExecute(Encounter encounterNetwork) {
+			encounter = encounterNetwork;
+			
+			ArrayList<String> nameArray = new ArrayList<String>();
+			idArray = new ArrayList<Integer>();
+			//Log.d("TEST",Integer.toString(Options.getEncID(PreferenceManager.getDefaultSharedPreferences(this))));
+			for (Member iterMember : encounter.members)
+			{
+				if (iterMember.character_id != null)
+				{
+					nameArray.add(iterMember.name);
+					idArray.add(iterMember.id);
+					//Log.d("TEST",iterMember.name);
+				}
+			}
+			
+			Intent i = new Intent(currContext, CharacterSelect.class);
+			String[] characterArray = nameArray.toArray(new String[nameArray.size()]);
+			i.putExtra("k11.encrunner.characterArray", characterArray);
+			startActivityForResult(i, 0);
+		}
+	}
+	
+	class MemberGetTask extends AsyncTask<Member, Void, Member> {
+		private Member MemberCopy;
+		private Context currContext;
+		
+		public MemberGetTask(Context currContext) {
+			this.currContext = currContext;
+		}
+		
+		@Override
+		//Network code, run in separate thread
+		protected Member doInBackground(Member... params) {
+			MemberCopy = params[0]; //Not sure if required
+			MemberCopy.Get();
+			return MemberCopy;
+		}
+		
+		@Override
+		//After network code ran, run in UI thread
+		protected void onPostExecute(Member memberNetwork) {
+			currMember = memberNetwork;
+			((TextView) findViewById(R.id.character_name)).setText(String.valueOf(currMember.name));
+			((TextView) findViewById(R.id.character_enchp)).setText(String.valueOf(currMember.enc_hp));
+			//Setup List View
+			//This dual array hack irks me...
+			Log.d("Marker",Integer.toString(currMember.markers.size()));
+			ArrayList<Integer> markerIDArray = new ArrayList<Integer>();
+			ArrayList<String> markerNameArray = new ArrayList<String>();
+			for (Marker iterMarker : currMember.markers)
+			{
+					markerNameArray.add(iterMarker.effect);
+					markerIDArray.add(iterMarker.id);
+			}
+			setListAdapter(new ArrayAdapter<String>(currContext, R.layout.listitem,markerNameArray));
+		}
+	}
+	
+	class MemberUpdateTask extends AsyncTask<Integer, Void, Member> { //TODO Don't need to return any value from Network thread
+		private Member MemberCopy;
+		
+		public MemberUpdateTask(Member MemberCopy) {
+				this.MemberCopy = MemberCopy;
+		}
+		
+		@Override
+		//Network code, run in separate thread
+		protected Member doInBackground(Integer... params) {
+			MemberCopy.enc_hp += params[0];
+			MemberCopy.Update();
+			return MemberCopy; //TODO Fix this, we don't need to return anything
+		}
+		
+		@Override
+		//After network code ran, run in UI thread
+		protected void onPostExecute(Member memberNetwork) {
+    		((TextView) findViewById(R.id.character_change)).setText("");
+    		refresh();
+		}
 	}
 }

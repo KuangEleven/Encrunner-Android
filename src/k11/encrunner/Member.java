@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
+import android.util.Log;
 
 public class Member {
 	public Integer id;
@@ -60,6 +61,7 @@ public class Member {
 	public void Get()
 	{
 		markers.clear();
+		Log.d("MARKER","GET MEMBER");
 		
 		//Setup listeners for XML handling
 		RootElement memberElement = new RootElement("member");
@@ -131,6 +133,7 @@ public class Member {
 		memberElement.getChild("markers").getChild("marker").getChild("id").setEndTextElementListener(
 				new EndTextElementListener() {
 					public void end(String body) {
+						Log.d("MARKER","NEW MARKER");
 						markers.add(new Marker(Integer.valueOf(body),prefs));
 					}
 				});

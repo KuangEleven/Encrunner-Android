@@ -20,7 +20,7 @@ import android.sax.RootElement;
 import android.sax.Element;
 
 public class Encounter { //TODO Add Interface for all these entity classes? Would implement constructor(), constructor(id), Get(),Update(),Create(),Delete()
-	private Integer id;
+	public Integer id;
 	public Integer round;
 	public Integer currPosition;
 	private SharedPreferences prefs;
