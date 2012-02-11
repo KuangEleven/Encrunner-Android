@@ -19,6 +19,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -26,9 +27,10 @@ import android.content.SharedPreferences;
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
+import android.sax.StartElementListener;
 import android.util.Log;
 
-public class Member {
+public class Member implements Cloneable {
 	public Integer id;
 	public String name;
 	public Integer enc_hp;
@@ -57,11 +59,23 @@ public class Member {
 		Get();
 	}
 	
+	/** Clones current Member, shallow clone, only clones references to subobjects */
+	public Member clone()
+	{
+		try {
+			return (Member) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	/** Gets Member data from XML, must have id set */ //TODO Enforce id with exception handling
 	public void Get()
 	{
 		markers.clear();
-		Log.d("MARKER","GET MEMBER");
+		//Log.d("MARKER","GET MEMBER");
 		
 		//Setup listeners for XML handling
 		RootElement memberElement = new RootElement("member");
@@ -130,10 +144,17 @@ public class Member {
 					}
 				});
 		
+		memberElement.getChild("markers").setStartElementListener(
+				new StartElementListener() {
+					public void start(Attributes att) {
+						markers = new ArrayList<Marker>();
+					}
+				});
+		
 		memberElement.getChild("markers").getChild("marker").getChild("id").setEndTextElementListener(
 				new EndTextElementListener() {
 					public void end(String body) {
-						Log.d("MARKER","NEW MARKER");
+						//Log.d("MARKER","NEW MARKER");
 						markers.add(new Marker(Integer.valueOf(body),prefs));
 					}
 				});

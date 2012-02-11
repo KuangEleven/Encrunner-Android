@@ -31,8 +31,8 @@ public class MainMenu extends Activity implements OnClickListener {
         partyButton.setOnClickListener(this);
         View characterButton = findViewById(R.id.character_button);
         characterButton.setOnClickListener(this);
-        View tableButton = findViewById(R.id.table_button);
-        tableButton.setOnClickListener(this);
+        //View tableButton = findViewById(R.id.table_button);
+        //tableButton.setOnClickListener(this);
         View scoreboardButton = findViewById(R.id.scoreboard_button);
         scoreboardButton.setOnClickListener(this);
         View optionsButton = findViewById(R.id.options_button);
